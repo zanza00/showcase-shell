@@ -7,6 +7,7 @@ const lifecycles = singleSpaReact({
   React,
   ReactDOMClient,
   rootComponent: Root,
+  domElementGetter: () => document.getElementById("shell-container")!,
   errorBoundary(err, info, props) {
     // Customize the root error boundary for your microfrontend here.
     return null;

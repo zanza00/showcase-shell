@@ -1,0 +1,81 @@
+/* Progress Bar Styles */
+.progress-bar-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 2rem;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.nav-button {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.nav-button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.05);
+}
+
+.nav-button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.progress-info {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.slide-counter {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: white;
+  min-width: 3rem;
+  text-align: center;
+}
+
+.progress-track {
+  flex: 1;
+  height: 0.5rem;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 0.25rem;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: white;
+  transition: width 0.3s ease;
+  border-radius: 0.25rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .progress-bar-container {
+    padding: 0.5rem 1rem;
+  }
+
+  .nav-button {
+    width: 2rem;
+    height: 2rem;
+    font-size: 1rem;
+  }
+
+  .slide-counter {
+    font-size: 0.75rem;
+    min-width: 2.5rem;
+  }
+}
