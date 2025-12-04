@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import './ProgressBar.css';
+import React, { useState, useEffect } from "react";
+import "./ProgressBar.css";
 
 const ProgressBar: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(1);
@@ -7,23 +7,23 @@ const ProgressBar: React.FC = () => {
 
   // Route to slide number mapping
   const routeToSlide: Record<string, number> = {
-    '/': 1,
-    '/about': 2,
-    '/architecture': 3,
-    '/good': 4,
-    '/bad': 5,
-    '/ugly': 6,
-    '/end': 7,
+    "/": 1,
+    "/about": 2,
+    "/architecture": 3,
+    "/good": 4,
+    "/bad": 5,
+    "/ugly": 6,
+    "/end": 7,
   };
 
   const slideToRoute: Record<number, string> = {
-    1: '/',
-    2: '/about',
-    3: '/architecture',
-    4: '/good',
-    5: '/bad',
-    6: '/ugly',
-    7: '/end',
+    1: "/",
+    2: "/about",
+    3: "/architecture",
+    4: "/good",
+    5: "/bad",
+    6: "/ugly",
+    7: "/end",
   };
 
   useEffect(() => {
@@ -39,20 +39,20 @@ const ProgressBar: React.FC = () => {
     updateSlide();
 
     // Listen for route changes
-    window.addEventListener('popstate', updateSlide);
-    window.addEventListener('single-spa:routing-event', updateSlide);
+    window.addEventListener("popstate", updateSlide);
+    window.addEventListener("single-spa:routing-event", updateSlide);
 
     return () => {
-      window.removeEventListener('popstate', updateSlide);
-      window.removeEventListener('single-spa:routing-event', updateSlide);
+      window.removeEventListener("popstate", updateSlide);
+      window.removeEventListener("single-spa:routing-event", updateSlide);
     };
   }, []);
 
   const navigate = (slide: number) => {
     const path = slideToRoute[slide];
     if (path) {
-      window.history.pushState({}, '', path);
-      window.dispatchEvent(new PopStateEvent('popstate'));
+      window.history.pushState({}, "", path);
+      window.dispatchEvent(new PopStateEvent("popstate"));
       setCurrentSlide(slide);
     }
   };
