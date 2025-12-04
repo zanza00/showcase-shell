@@ -3,27 +3,31 @@ import "./ProgressBar.css";
 
 const ProgressBar: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(1);
-  const totalSlides = 7; // Intro, About, Architecture, Good, Bad, Ugly, Q&A
+  const totalSlides = 9; // Intro, About, Setup, Spoilers, Architecture, Good, Bad, Ugly, Q&A
 
   // Route to slide number mapping
   const routeToSlide: Record<string, number> = {
     "/": 1,
     "/about": 2,
-    "/architecture": 3,
-    "/good": 4,
-    "/bad": 5,
-    "/ugly": 6,
-    "/end": 7,
+    "/setup": 3,
+    "/spoilers": 4,
+    "/architecture": 5,
+    "/good": 6,
+    "/bad": 7,
+    "/ugly": 8,
+    "/end": 9,
   };
 
   const slideToRoute: Record<number, string> = {
     1: "/",
     2: "/about",
-    3: "/architecture",
-    4: "/good",
-    5: "/bad",
-    6: "/ugly",
-    7: "/end",
+    3: "/setup",
+    4: "/spoilers",
+    5: "/architecture",
+    6: "/good",
+    7: "/bad",
+    8: "/ugly",
+    9: "/end",
   };
 
   useEffect(() => {

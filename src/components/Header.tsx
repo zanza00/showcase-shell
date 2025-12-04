@@ -6,6 +6,8 @@ const Header: React.FC = () => {
   const navItems = [
     { path: '/', label: 'Intro' },
     { path: '/about', label: 'About' },
+    { path: '/setup', label: 'Setup' },
+    { path: '/spoilers', label: 'Spoilers' },
     { path: '/architecture', label: 'Architecture' },
     { path: '/good', label: 'The Good' },
     { path: '/bad', label: 'The Bad' },
