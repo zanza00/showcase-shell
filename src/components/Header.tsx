@@ -80,7 +80,7 @@ const Header: React.FC = () => {
 
         <div className="header-current">
           <span className="current-slide-title">
-            {currentSlide?.title || 'Welcome'}
+            {currentSlide?.title ?? 'Welcome'}
           </span>
         </div>
 
