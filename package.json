@@ -58,5 +58,5 @@
     "single-spa-react": "^6.0.2"
   },
   "types": "dist/showcase-shell.d.ts",
-  "version": "0.0.1"
+  "version": "0.0.2"
 }
