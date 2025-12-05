@@ -9,7 +9,6 @@ module.exports = (webpackConfigEnv, argv) => {
     argv,
     outputSystemJS: false,
   });
-
   return merge(defaultConfig, {
     externals: ["@showcase/shared-libs", "@showcase/intro", "@showcase/content"],
   });

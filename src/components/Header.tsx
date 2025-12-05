@@ -1,46 +1,128 @@
-import React from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { resolveManifests, findSlideByPath } from '@showcase/shared-libs';
+import { introManifest } from '@showcase/intro';
+import { contentManifest } from '@showcase/content';
 import './Header.css';
 
 const Header: React.FC = () => {
-  // Navigation items for the presentation
-  const navItems = [
-    { path: '/', label: 'Intro' },
-    { path: '/about', label: 'About' },
-    { path: '/setup', label: 'Setup' },
-    { path: '/spoilers', label: 'Spoilers' },
-    { path: '/architecture', label: 'Architecture' },
-    { path: '/good', label: 'The Good' },
-    { path: '/bad', label: 'The Bad' },
-    { path: '/ugly', label: 'The Ugly' },
-    { path: '/end', label: 'Q&A' },
-  ];
+  const [currentPath, setCurrentPath] = useState(window.location.pathname);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  const currentPath = window.location.pathname;
+  // Build the complete slide list from all manifests
+  const slides = useMemo(() => {
+    return resolveManifests([introManifest, contentManifest]);
+  }, []);
+
+  useEffect(() => {
+    const updatePath = () => {
+      setCurrentPath(window.location.pathname);
+    };
+
+    window.addEventListener('popstate', updatePath);
+    window.addEventListener('single-spa:routing-event', updatePath);
+
+    return () => {
+      window.removeEventListener('popstate', updatePath);
+      window.removeEventListener('single-spa:routing-event', updatePath);
+    };
+  }, []);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (!target.closest('.dropdown-container')) {
+        setDropdownOpen(false);
+      }
+    };
+
+    if (dropdownOpen) {
+      document.addEventListener('click', handleClickOutside);
+      return () => document.removeEventListener('click', handleClickOutside);
+    }
+  }, [dropdownOpen]);
 
   const handleNavigate = (path: string) => {
     window.history.pushState({}, '', path);
-    // Dispatch popstate event to trigger Single-SPA reroute
     window.dispatchEvent(new PopStateEvent('popstate'));
+    setCurrentPath(path);
+    setDropdownOpen(false);
   };
+
+  const currentSlideIndex = findSlideByPath(slides, currentPath);
+  const currentSlide = slides[currentSlideIndex];
+  const prevSlide = currentSlideIndex > 0 ? slides[currentSlideIndex - 1] : null;
+  const nextSlide = currentSlideIndex < slides.length - 1 ? slides[currentSlideIndex + 1] : null;
 
   return (
     <header className="showcase-header">
-      <div className="header-content">
-        <h1 className="header-title">
-          Single-SPA Showcase
-        </h1>
-        
-        <nav className="header-nav">
-          {navItems.map((item) => (
+      {/* Row 1: Main title */}
+      <div className="header-row header-title-row">
+        <h1 className="header-title">Single-SPA Showcase</h1>
+      </div>
+
+      {/* Row 2: Navigation */}
+      <div className="header-row header-nav-row">
+        <div className="header-nav-section">
+          {prevSlide ? (
             <button
-              key={item.path}
-              onClick={() => handleNavigate(item.path)}
-              className={`nav-item ${currentPath === item.path ? 'active' : ''}`}
+              className="nav-adjacent prev"
+              onClick={() => handleNavigate(prevSlide.fullPath)}
+              title={prevSlide.title}
             >
-              {item.label}
+              <span className="nav-arrow">←</span>
+              <span className="nav-adjacent-title">{prevSlide.title}</span>
             </button>
-          ))}
-        </nav>
+          ) : (
+            <div className="nav-adjacent-placeholder" />
+          )}
+        </div>
+
+        <div className="header-current">
+          <span className="current-slide-title">
+            {currentSlide?.title || 'Welcome'}
+          </span>
+        </div>
+
+        <div className="header-nav-section">
+          {nextSlide ? (
+            <button
+              className="nav-adjacent next"
+              onClick={() => handleNavigate(nextSlide.fullPath)}
+              title={nextSlide.title}
+            >
+              <span className="nav-adjacent-title">{nextSlide.title}</span>
+              <span className="nav-arrow">→</span>
+            </button>
+          ) : (
+            <div className="nav-adjacent-placeholder" />
+          )}
+
+          <div className="dropdown-container">
+            <button
+              className="dropdown-trigger"
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+              aria-label="Open slide menu"
+            >
+              ☰
+            </button>
+            
+            {dropdownOpen && (
+              <div className="dropdown-menu">
+                {slides.map((slide, index) => (
+                  <button
+                    key={slide.fullPath}
+                    onClick={() => handleNavigate(slide.fullPath)}
+                    className={`dropdown-item ${index === currentSlideIndex ? 'active' : ''}`}
+                  >
+                    <span className="dropdown-item-number">{index + 1}.</span>
+                    {slide.title}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </header>
   );
