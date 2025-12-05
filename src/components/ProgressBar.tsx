@@ -1,80 +1,63 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import ReactDOM from "react-dom";
+import {
+  resolveManifests,
+  findSlideByPath,
+  type ResolvedSlide,
+} from "@showcase/shared-libs";
+import { introManifest } from "@showcase/intro";
+import { contentManifest } from "@showcase/content";
 import "./ProgressBar.css";
 
 const ProgressBar: React.FC = () => {
-  const [currentSlide, setCurrentSlide] = useState(1);
-  const totalSlides = 9; // Intro, About, Setup, Spoilers, Architecture, Good, Bad, Ugly, Q&A
+  const [currentPath, setCurrentPath] = useState(window.location.pathname);
 
-  // Route to slide number mapping
-  const routeToSlide: Record<string, number> = {
-    "/": 1,
-    "/about": 2,
-    "/setup": 3,
-    "/spoilers": 4,
-    "/architecture": 5,
-    "/good": 6,
-    "/bad": 7,
-    "/ugly": 8,
-    "/end": 9,
-  };
+  // Build the complete slide list from all manifests
+  const slides: ResolvedSlide[] = useMemo(() => {
+    return resolveManifests([introManifest, contentManifest]);
+  }, []);
 
-  const slideToRoute: Record<number, string> = {
-    1: "/",
-    2: "/about",
-    3: "/setup",
-    4: "/spoilers",
-    5: "/architecture",
-    6: "/good",
-    7: "/bad",
-    8: "/ugly",
-    9: "/end",
-  };
+  const totalSlides = slides.length;
+  const currentSlideIndex = findSlideByPath(slides, currentPath);
+  const currentSlide = currentSlideIndex + 1; // 1-based for display
 
   useEffect(() => {
-    // Update current slide based on URL
-    const updateSlide = () => {
-      const path = window.location.pathname;
-      const slide = routeToSlide[path];
-      if (slide) {
-        setCurrentSlide(slide);
-      }
+    const updatePath = () => {
+      setCurrentPath(window.location.pathname);
     };
 
-    updateSlide();
-
-    // Listen for route changes
-    window.addEventListener("popstate", updateSlide);
-    window.addEventListener("single-spa:routing-event", updateSlide);
+    window.addEventListener("popstate", updatePath);
+    window.addEventListener("single-spa:routing-event", updatePath);
 
     return () => {
-      window.removeEventListener("popstate", updateSlide);
-      window.removeEventListener("single-spa:routing-event", updateSlide);
+      window.removeEventListener("popstate", updatePath);
+      window.removeEventListener("single-spa:routing-event", updatePath);
     };
   }, []);
 
-  const navigate = (slide: number) => {
-    const path = slideToRoute[slide];
-    if (path) {
-      window.history.pushState({}, "", path);
+  const navigate = (index: number) => {
+    if (index >= 0 && index < slides.length) {
+      const slide = slides[index];
+      window.history.pushState({}, "", slide.fullPath);
       window.dispatchEvent(new PopStateEvent("popstate"));
-      setCurrentSlide(slide);
+      setCurrentPath(slide.fullPath);
     }
   };
 
   const goToPrevious = () => {
-    if (currentSlide > 1) {
-      navigate(currentSlide - 1);
+    if (currentSlideIndex > 0) {
+      navigate(currentSlideIndex - 1);
     }
   };
 
   const goToNext = () => {
-    if (currentSlide < totalSlides) {
-      navigate(currentSlide + 1);
+    if (currentSlideIndex < totalSlides - 1) {
+      navigate(currentSlideIndex + 1);
     }
   };
 
-  const progressPercentage = ((currentSlide - 1) / (totalSlides - 1)) * 100;
+  const progressPercentage =
+    totalSlides > 1 ? (currentSlideIndex / (totalSlides - 1)) * 100 : 0;
 
   const portalTarget = document.getElementById("progress-bar-portal");
 
@@ -83,7 +66,7 @@ const ProgressBar: React.FC = () => {
       <button
         className="nav-button"
         onClick={goToPrevious}
-        disabled={currentSlide === 1}
+        disabled={currentSlideIndex <= 0}
         aria-label="Previous slide"
       >
         ←
@@ -104,7 +87,7 @@ const ProgressBar: React.FC = () => {
       <button
         className="nav-button"
         onClick={goToNext}
-        disabled={currentSlide === totalSlides}
+        disabled={currentSlideIndex >= totalSlides - 1}
         aria-label="Next slide"
       >
         →
