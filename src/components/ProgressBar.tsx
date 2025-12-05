@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import ReactDOM from "react-dom";
 import "./ProgressBar.css";
 
 const ProgressBar: React.FC = () => {
@@ -75,7 +76,9 @@ const ProgressBar: React.FC = () => {
 
   const progressPercentage = ((currentSlide - 1) / (totalSlides - 1)) * 100;
 
-  return (
+  const portalTarget = document.getElementById("progress-bar-portal");
+
+  const progressBarContent = (
     <div className="progress-bar-container">
       <button
         className="nav-button"
@@ -108,6 +111,13 @@ const ProgressBar: React.FC = () => {
       </button>
     </div>
   );
+
+  // Use portal if target exists, otherwise render inline (fallback)
+  if (portalTarget) {
+    return ReactDOM.createPortal(progressBarContent, portalTarget);
+  }
+
+  return progressBarContent;
 };
 
 export default ProgressBar;
