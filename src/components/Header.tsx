@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { resolveManifests, findSlideByPath } from '@showcase/shared-libs';
-import { introManifest } from '@showcase/intro';
-import { contentManifest } from '@showcase/content';
+import { resolveManifests, findSlideByPath } from '@zanza00/shared-libs';
+import { introManifest } from '@zanza00/intro';
+import { contentManifest } from '@zanza00/content';
 import './Header.css';
 
 const Header: React.FC = () => {

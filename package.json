@@ -1,5 +1,13 @@
 {
-  "name": "@showcase/shell",
+  "name": "@zanza00/shell",
+  "repository": {
+    "url": "https://github.com/zanza00/showcase-shell"
+  },
+  "main": "dist/zanza00-shell.js",
+  "types": "dist/zanza00-shell.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "start": "webpack serve",
     "start:standalone": "webpack serve --env standalone",
@@ -30,6 +38,9 @@
     "@types/react-dom": "^19.2.3",
     "@types/systemjs": "^6.1.1",
     "@types/webpack-env": "^1.16.2",
+    "@zanza00/content": "^0.0.5",
+    "@zanza00/intro": "^0.0.4",
+    "@zanza00/shared-libs": "^0.0.9",
     "babel-jest": "^27.5.1",
     "concurrently": "^6.2.1",
     "cross-env": "^7.0.3",
@@ -57,6 +68,5 @@
     "single-spa": "^6.0.3",
     "single-spa-react": "^6.0.2"
   },
-  "types": "dist/showcase-shell.d.ts",
   "version": "0.0.5"
 }

@@ -4,16 +4,9 @@
     "jsx": "react-jsx",
     "declarationDir": "dist",
     "skipLibCheck": true,
-    "baseUrl": ".",
-    "paths": {
-      "@showcase/shared-libs": ["../shared-libs/src/showcase-shared-libs.tsx"],
-      "@showcase/intro": ["../intro/src/showcase-intro.tsx"],
-      "@showcase/content": ["../content/src/showcase-content.tsx"],
-      "@showcase/shell": ["../shell/src/showcase-shell.tsx"],
-      "@showcase/qa-extra": ["../qa-extra/src/showcase-qa-extra.tsx"]
-    }
+    "baseUrl": "."
   },
-  "files": ["src/showcase-shell.tsx"],
+  "files": ["src/zanza00-shell.tsx"],
   "include": ["src/**/*"],
   "exclude": ["src/**/*.test*"]
 }

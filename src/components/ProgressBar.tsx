@@ -4,9 +4,9 @@ import {
   resolveManifests,
   findSlideByPath,
   type ResolvedSlide,
-} from "@showcase/shared-libs";
-import { introManifest } from "@showcase/intro";
-import { contentManifest } from "@showcase/content";
+} from "@zanza00/shared-libs";
+import { introManifest } from "@zanza00/intro";
+import { contentManifest } from "@zanza00/content";
 import "./ProgressBar.css";
 
 const ProgressBar: React.FC = () => {
